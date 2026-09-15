@@ -2,7 +2,7 @@
 
 ## Arquitectura de la aplicación móvil
 
-[Abrir diagrama interactivo](https://jffa25.github.io/Practicas_Integradora_230417/architecture-mobile-platform.html)
+[Abrir diagrama interactivo](https://jffa25.github.io/Practicas_Integradora_230417//architecture-mobile-platform.html)
 
 [![Vista previa del diagrama](architecture-mobile-platform.visual-check.2048x1320.dark.png)](https://jffa25.github.io/Practicas_Integradora_230417/architecture-mobile-platform.html)
 
