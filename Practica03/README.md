@@ -7,7 +7,9 @@
 ## Video Demostracion
 
 <p align="center">
-  <video src="URL_DEL_VIDEO_DE_GITHUB" width="80%" controls></video>
+  <video src="https://github.com/JFFA25/Practicas_Integradora_230417/issues/1#issue-5536416108" width="80%" controls>
+    Tu navegador no puede reproducir este video.
+  </video>
 </p>
 
 
