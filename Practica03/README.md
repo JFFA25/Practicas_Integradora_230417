@@ -6,11 +6,14 @@
 
 ## Video Demostracion
 
+
 <p align="center">
-  <video src="https://github.com/JFFA25/Practicas_Integradora_230417/issues/1#issue-5536416108" width="80%" controls>
-    Tu navegador no puede reproducir este video.
-  </video>
+  <video src="https://github.com/user-attachments/assets/32daab71-c59e-4895-8054-12ee996fd141" width="80%" controls></video>
 </p>
+
+Para poder subir el video con la demostracion se uso la pagina Clideo para comprimir el tamaño del video ya que solo esta permitido un maximo de 10MB
+
+> URL del Sitio https://clideo.com/es/compress-video
 
 
 ## Descripción — Business Model Canvas de Spotify
