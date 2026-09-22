@@ -1,53 +1,458 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spotify — Business Model Canvas</title>
-  <style>
-    :root { --ink:#10223a; --muted:#4f6072; --line:#dbe3ec; --paper:#f5f7fa; }
-    * { box-sizing:border-box; }
-    body { margin:0; min-width:1180px; background:var(--paper); color:var(--ink); font-family:Inter,Segoe UI,Arial,sans-serif; }
-    main { width:1440px; margin:0 auto; padding:42px 44px 48px; }
-    .masthead { display:flex; justify-content:space-between; align-items:end; margin-bottom:24px; }
-    h1 { margin:0; font-size:31px; letter-spacing:-.7px; }
-    .subtitle { margin:7px 0 0; color:var(--muted); font-size:15px; }
-    .brand { color:#1ed760; font-weight:800; font-size:23px; letter-spacing:-.4px; }
-    .canvas { display:grid; grid-template-columns:1.05fr 1.32fr 1.05fr 1.05fr 1.15fr; grid-template-rows:224px 224px 224px; gap:14px; }
-    .block { border-radius:17px; padding:20px 20px 16px; box-shadow:0 8px 22px rgba(25,48,76,.10); border:1px solid rgba(16,34,58,.07); overflow:hidden; }
-    .block h2 { margin:0 0 12px; font-size:15px; line-height:1.16; letter-spacing:.1px; }
-    .block ul { margin:0; padding-left:18px; font-size:13.1px; line-height:1.42; }
-    .block li { margin:0 0 6px; }
-    .seg { grid-column:1; grid-row:1 / span 2; background:#dff5ff; border-top:6px solid #16b8e8; }
-    .prop { grid-column:2 / span 2; grid-row:1 / span 2; background:#e8f9eb; border-top:6px solid #1db954; padding:27px 28px; }
-    .prop h2 { font-size:20px; margin-bottom:17px; }
-    .prop ul { columns:2; column-gap:34px; font-size:14px; line-height:1.48; }
-    .rel { grid-column:4; grid-row:1; background:#f4e9ff; border-top:6px solid #a768e8; }
-    .can { grid-column:5; grid-row:1; background:#fff2d9; border-top:6px solid #f2a723; }
-    .ing { grid-column:4 / span 2; grid-row:2; background:#ffe8ec; border-top:6px solid #ed5b79; }
-    .rec { grid-column:1; grid-row:3; background:#e6efff; border-top:6px solid #4d83ed; }
-    .act { grid-column:2; grid-row:3; background:#e8f7f4; border-top:6px solid #18a98c; }
-    .soc { grid-column:3; grid-row:3; background:#f3eddf; border-top:6px solid #b28b37; }
-    .cost { grid-column:4 / span 2; grid-row:3; background:#f0e9ff; border-top:6px solid #8063df; }
-    .number { display:inline-flex; width:25px; height:25px; align-items:center; justify-content:center; border-radius:50%; margin-right:7px; color:white; background:rgba(16,34,58,.72); font-size:12px; vertical-align:2px; }
-    footer { display:flex; justify-content:space-between; margin-top:17px; color:#68798a; font-size:12px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spotify — Business Model Canvas</title>
+<style>
+  :root {
+    box-sizing: border-box;
+    --bg: #0b1220;
+    --panel: #0f1830;
+    --panel-2: #111c38;
+    --line: #22304f;
+    --ink: #e8edf8;
+    --muted: #8fa1c2;
+    --muted-2: #5f7295;
+    --accent: #1db954;
+    --seg: #22c3ea;
+    --prop: #1db954;
+    --rel: #b285f0;
+    --can: #f5ab35;
+    --ing: #f2617e;
+    --rec: #5a8bf2;
+    --act: #23b79a;
+    --soc: #d1a44e;
+    --cost: #8a6df0;
+    --radius: 14px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root[data-theme="light"] {
+    --bg: #eef1f6;
+    --panel: #ffffff;
+    --panel-2: #f6f8fc;
+    --line: #dde3ee;
+    --ink: #101a2c;
+    --muted: #566481;
+    --muted-2: #8494ae;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+  .app { display: flex; flex-direction: column; height: 100vh; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; padding-top: calc(14px + env(safe-area-inset-top, 0px));
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+    flex: 0 0 auto;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .brand h1 { font-size: 16px; margin: 0; font-weight: 600; letter-spacing: .2px; }
+  .brand .sub { color: var(--muted); font-size: 12px; margin-left: 4px; }
+  .controls { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
+    padding: 7px 12px; border-radius: 8px; font-size: 12.5px; cursor: pointer;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--muted-2); }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #06210f; font-weight: 600; }
+
+  /* ---------- Guided views strip ---------- */
+  .guided {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; border-bottom: 1px solid var(--line);
+    background: var(--panel); flex: 0 0 auto; overflow-x: auto;
+  }
+  .guided .label { font-size: 11px; color: var(--muted); white-space: nowrap; padding-right: 6px; border-right: 1px solid var(--line); margin-right: 4px; }
+  .guided .label b { display: block; color: var(--ink); font-size: 12.5px; font-weight: 600; }
+  .story-btn {
+    display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .chip {
+    padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-2);
+    color: var(--muted); font-size: 12.5px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .chip .n { width: 16px; height: 16px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 10px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .chip.active { color: var(--ink); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--panel-2)); }
+  .chip.active .n { background: var(--accent); color: #06210f; }
+
+  /* ---------- Canvas viewport ---------- */
+  .viewport {
+    position: relative; flex: 1 1 auto; overflow: hidden; cursor: grab;
+    background-image: radial-gradient(circle, var(--line) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .viewport.grabbing { cursor: grabbing; }
+  .stage {
+    position: absolute; top: 0; left: 0; transform-origin: 0 0;
+    width: 1360px; padding: 46px;
+  }
+  .frame {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr 1.3fr 1.05fr 1.05fr 1.15fr;
+    grid-template-rows: 190px 190px 190px;
+    gap: 16px;
+  }
+
+  .zone {
+    position: absolute; border: 1.5px dashed var(--line); border-radius: 22px;
+    pointer-events: none; transition: border-color .25s, opacity .25s;
+  }
+  .zone .zone-label {
+    position: absolute; top: -11px; left: 18px; background: var(--bg);
+    padding: 0 8px; font-size: 10.5px; letter-spacing: .3px; color: var(--muted-2);
+  }
+
+  .node {
+    border-radius: var(--radius); border: 1.5px solid var(--line);
+    background: var(--panel); padding: 15px 16px 13px;
+    display: flex; flex-direction: column; position: relative;
+    transition: border-color .25s, box-shadow .25s, opacity .25s, transform .25s;
+  }
+  .node .head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .node .badge { width: 22px; height: 22px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #061019; flex: 0 0 auto; }
+  .node h2 { font-size: 13px; margin: 0; font-weight: 600; line-height: 1.2; }
+  .node .tag { position: absolute; top: 12px; right: 14px; font-size: 9.5px; color: var(--muted-2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+  .node ul { margin: 0; padding-left: 15px; font-size: 11.8px; line-height: 1.5; color: var(--muted); flex: 1 1 auto; }
+  .node li { margin-bottom: 3px; }
+  .node li::marker { color: var(--muted-2); }
+
+  .node.dim { opacity: .28; }
+  .node.hot {
+    border-color: var(--accent-color, var(--accent));
+    box-shadow: 0 0 0 1px var(--accent-color, var(--accent)), 0 10px 30px -8px var(--accent-color, var(--accent));
+  }
+
+  .n-seg { grid-column: 1; grid-row: 1 / span 2; } 
+  .n-prop { grid-column: 2 / span 2; grid-row: 1 / span 2; }
+  .n-rel { grid-column: 4; grid-row: 1; }
+  .n-can { grid-column: 5; grid-row: 1; }
+  .n-ing { grid-column: 4 / span 2; grid-row: 2; }
+  .n-rec { grid-column: 1; grid-row: 3; }
+  .n-act { grid-column: 2; grid-row: 3; }
+  .n-soc { grid-column: 3; grid-row: 3; }
+  .n-cost { grid-column: 4 / span 2; grid-row: 3; }
+
+  .n-prop { padding: 22px 24px 18px; }
+  .n-prop h2 { font-size: 16px; }
+  .n-prop ul { columns: 2; column-gap: 28px; font-size: 12.6px; }
+  .n-prop .badge { width: 26px; height: 26px; font-size: 13px; }
+
+  /* zone positions computed via inline style in JS-free CSS grid overlay */
+  .zone-value { grid-column: 1 / span 4; grid-row: 1 / span 1; }
+
+  /* ---------- Zoom controls ---------- */
+  .zoomctl {
+    position: absolute; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center; gap: 2px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 4px; z-index: 5;
+  }
+  .zoomctl button { width: 30px; height: 30px; border-radius: 7px; border: none; background: transparent; color: var(--ink); font-size: 15px; cursor: pointer; }
+  .zoomctl button:hover { background: var(--panel-2); }
+  .zoomctl .pct { font-size: 11px; color: var(--muted); width: 42px; text-align: center; }
+
+  /* ---------- Legend / footer ---------- */
+  .legend {
+    display: flex; gap: 34px; padding: 14px 22px; border-top: 1px solid var(--line);
+    background: var(--panel); flex: 0 0 auto; overflow-x: auto;
+  }
+  .legend .col { min-width: 250px; }
+  .legend .col .lt { font-size: 12px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+  .legend .col .lt .sw { width: 8px; height: 8px; border-radius: 2px; }
+  .legend .col p { margin: 0; font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+  @media (max-width: 760px) {
+    .legend { display: none; }
+    .guided .label { display: none; }
+    .brand .sub { display: none; }
+  }
+</style>
 </head>
 <body>
-<main>
-  <header class="masthead"><div><h1>Business Model Canvas</h1><p class="subtitle">Modelo de negocio resumido · Spotify</p></div><div class="brand">● Spotify</div></header>
-  <section class="canvas" aria-label="Business Model Canvas de Spotify">
-    <article class="block seg"><h2><span class="number">1</span>Segmentos de clientes</h2><ul><li>Oyentes gratuitos</li><li>Suscriptores Premium</li><li>Estudiantes y familias</li><li>Anunciantes y marcas</li><li>Artistas, sellos y creadores</li><li>Podcasters y audiolibros</li></ul></article>
-    <article class="block prop"><h2><span class="number">2</span>Propuesta de valor</h2><ul><li>Acceso inmediato a música, podcasts y audiolibros</li><li>Descubrimiento personalizado mediante algoritmos</li><li>Experiencia multiplataforma y reproducción sin interrupciones</li><li>Plan gratuito con publicidad y Premium sin anuncios</li><li>Escucha offline y mayor control para usuarios Premium</li><li>Herramientas de distribución, analítica y promoción para creadores</li></ul></article>
-    <article class="block rel"><h2><span class="number">4</span>Relación con clientes</h2><ul><li>Autoservicio digital</li><li>Recomendaciones personalizadas</li><li>Playlists y funciones sociales</li><li>Soporte en línea</li><li>Pruebas y ofertas Premium</li></ul></article>
-    <article class="block can"><h2><span class="number">3</span>Canales</h2><ul><li>Apps móvil y escritorio</li><li>Reproductor web</li><li>Smart TV, consolas y autos</li><li>App stores y web</li><li>Redes sociales y alianzas</li></ul></article>
-    <article class="block ing"><h2><span class="number">5</span>Fuentes de ingresos</h2><ul><li>Suscripciones Premium individuales, Duo, Familiar y Estudiantes</li><li>Publicidad de audio, video y display para usuarios gratuitos</li><li>Servicios y herramientas para anunciantes</li><li>Ingresos vinculados a contenidos de audio seleccionados</li></ul></article>
-    <article class="block rec"><h2><span class="number">6</span>Recursos clave</h2><ul><li>Marca y base de usuarios</li><li>Plataforma tecnológica</li><li>Datos y algoritmos</li><li>Licencias de contenido</li><li>Catálogo y acuerdos</li><li>Talento especializado</li></ul></article>
-    <article class="block act"><h2><span class="number">7</span>Actividades clave</h2><ul><li>Desarrollo de producto</li><li>Curación y recomendación</li><li>Gestión de licencias</li><li>Adquisición y retención</li><li>Venta de publicidad</li><li>Operación de infraestructura</li></ul></article>
-    <article class="block soc"><h2><span class="number">8</span>Socios clave</h2><ul><li>Sellos y editoras musicales</li><li>Artistas y distribuidores</li><li>Podcasters y estudios</li><li>Proveedores cloud y pagos</li><li>Fabricantes y operadores</li><li>Agencias y anunciantes</li></ul></article>
-    <article class="block cost"><h2><span class="number">9</span>Estructura de costos</h2><ul><li>Regalías y licencias de música y contenido</li><li>Infraestructura cloud, almacenamiento y ancho de banda</li><li>Desarrollo, datos y ciberseguridad</li><li>Marketing, ventas y comisiones de plataformas</li><li>Personal, soporte y gastos administrativos</li></ul></article>
-  </section>
-  <footer><span>Canvas estratégico · contenido resumido para fines académicos</span><span>Spotify</span></footer>
-</main>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>Business Model Canvas</h1>
+      <span class="sub">Spotify · modelo de negocio</span>
+    </div>
+    <div class="controls">
+      <button class="btn" id="themeBtn">🌓 <span id="themeLabel">Claro</span></button>
+      <button class="btn primary" id="printBtn">⭳ Exportar</button>
+    </div>
+  </div>
+
+  <div class="guided" id="guidedBar">
+    <div class="label"><b>Vistas guiadas</b>0 / 4</div>
+    <button class="story-btn" id="playBtn">▶ Reproducir historia</button>
+    <div class="chip active" data-zone="all"><span class="n">◐</span>Explorar todo</div>
+    <div class="chip" data-zone="value"><span class="n">1</span>Cliente y valor</div>
+    <div class="chip" data-zone="revenue"><span class="n">2</span>Motor de ingresos</div>
+    <div class="chip" data-zone="ops"><span class="n">3</span>Motor operativo</div>
+  </div>
+
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage">
+      <div class="frame" id="frame">
+
+        <div class="zone" id="zoneValue" style="grid-column:1/6; grid-row:1/3;"><span class="zone-label">Cliente &amp; valor</span></div>
+        <div class="zone" id="zoneRevenue" style="grid-column:4/6; grid-row:2/4;"><span class="zone-label">Motor de ingresos</span></div>
+        <div class="zone" id="zoneOps" style="grid-column:1/4; grid-row:3/4;"><span class="zone-label">Motor operativo</span></div>
+
+        <article class="node n-seg" data-zone="value" style="--accent-color:var(--seg)">
+          <div class="tag">01</div>
+          <div class="head"><span class="badge" style="background:var(--seg)">S</span><h2>Segmentos de clientes</h2></div>
+          <ul>
+            <li>Oyentes gratuitos</li>
+            <li>Suscriptores Premium</li>
+            <li>Estudiantes y familias</li>
+            <li>Anunciantes y marcas</li>
+            <li>Artistas, sellos y creadores</li>
+            <li>Podcasters y audiolibros</li>
+          </ul>
+        </article>
+
+        <article class="node n-prop" data-zone="value" style="--accent-color:var(--prop)">
+          <div class="tag">02</div>
+          <div class="head"><span class="badge" style="background:var(--prop)">V</span><h2>Propuesta de valor</h2></div>
+          <ul>
+            <li>Acceso inmediato a música, podcasts y audiolibros</li>
+            <li>Descubrimiento personalizado por algoritmos</li>
+            <li>Experiencia multiplataforma sin interrupciones</li>
+            <li>Plan gratuito con anuncios y Premium sin anuncios</li>
+            <li>Escucha offline para usuarios Premium</li>
+            <li>Distribución y analítica para creadores</li>
+          </ul>
+        </article>
+
+        <article class="node n-rel" data-zone="value" style="--accent-color:var(--rel)">
+          <div class="tag">04</div>
+          <div class="head"><span class="badge" style="background:var(--rel)">R</span><h2>Relación con clientes</h2></div>
+          <ul>
+            <li>Autoservicio digital</li>
+            <li>Recomendaciones personalizadas</li>
+            <li>Playlists y funciones sociales</li>
+            <li>Soporte en línea</li>
+          </ul>
+        </article>
+
+        <article class="node n-can" data-zone="value" style="--accent-color:var(--can)">
+          <div class="tag">03</div>
+          <div class="head"><span class="badge" style="background:var(--can)">C</span><h2>Canales</h2></div>
+          <ul>
+            <li>Apps móvil y escritorio</li>
+            <li>Smart TV, consolas y autos</li>
+            <li>App stores y redes sociales</li>
+          </ul>
+        </article>
+
+        <article class="node n-ing" data-zone="revenue" style="--accent-color:var(--ing)">
+          <div class="tag">05</div>
+          <div class="head"><span class="badge" style="background:var(--ing)">$</span><h2>Fuentes de ingresos</h2></div>
+          <ul>
+            <li>Suscripciones Premium (individual, Duo, Familiar, Estudiantes)</li>
+            <li>Publicidad de audio, video y display en el plan gratuito</li>
+            <li>Servicios y herramientas para anunciantes</li>
+          </ul>
+        </article>
+
+        <article class="node n-rec" data-zone="ops" style="--accent-color:var(--rec)">
+          <div class="tag">06</div>
+          <div class="head"><span class="badge" style="background:var(--rec)">K</span><h2>Recursos clave</h2></div>
+          <ul>
+            <li>Marca y base de usuarios</li>
+            <li>Plataforma tecnológica</li>
+            <li>Datos, algoritmos y licencias</li>
+          </ul>
+        </article>
+
+        <article class="node n-act" data-zone="ops" style="--accent-color:var(--act)">
+          <div class="tag">07</div>
+          <div class="head"><span class="badge" style="background:var(--act)">A</span><h2>Actividades clave</h2></div>
+          <ul>
+            <li>Desarrollo de producto</li>
+            <li>Curación y recomendación</li>
+            <li>Gestión de licencias</li>
+          </ul>
+        </article>
+
+        <article class="node n-soc" data-zone="ops" style="--accent-color:var(--soc)">
+          <div class="tag">08</div>
+          <div class="head"><span class="badge" style="background:var(--soc)">P</span><h2>Socios clave</h2></div>
+          <ul>
+            <li>Sellos y editoras musicales</li>
+            <li>Podcasters y estudios</li>
+            <li>Proveedores cloud y pagos</li>
+          </ul>
+        </article>
+
+        <article class="node n-cost" data-zone="revenue" style="--accent-color:var(--cost)">
+          <div class="tag">09</div>
+          <div class="head"><span class="badge" style="background:var(--cost)">E</span><h2>Estructura de costos</h2></div>
+          <ul>
+            <li>Regalías y licencias de contenido</li>
+            <li>Infraestructura cloud y ciberseguridad</li>
+            <li>Marketing, personal y comisiones de plataformas</li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="zoomctl">
+      <button id="zoomOut">−</button>
+      <div class="pct" id="zoomPct">100%</div>
+      <button id="zoomIn">+</button>
+      <button id="zoomReset" title="Restablecer">⤾</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="col">
+      <div class="lt"><span class="sw" style="background:var(--prop)"></span>Cliente y valor</div>
+      <p>Segmentos, propuesta de valor, canales y relación: cómo Spotify atrae y conserva usuarios.</p>
+    </div>
+    <div class="col">
+      <div class="lt"><span class="sw" style="background:var(--ing)"></span>Motor de ingresos</div>
+      <p>Suscripciones y publicidad financian licencias, infraestructura y operación.</p>
+    </div>
+    <div class="col">
+      <div class="lt"><span class="sw" style="background:var(--rec)"></span>Motor operativo</div>
+      <p>Recursos, actividades y socios que sostienen el catálogo y la plataforma.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const themeLabel = document.getElementById('themeLabel');
+  let isLight = false;
+  try {
+    const saved = localStorage.getItem('canvas-theme');
+    if (saved === 'light') { isLight = true; }
+  } catch (e) {}
+  function applyTheme() {
+    root.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    themeLabel.textContent = isLight ? 'Oscuro' : 'Claro';
+  }
+  applyTheme();
+  themeBtn.addEventListener('click', () => {
+    isLight = !isLight;
+    applyTheme();
+    try { localStorage.setItem('canvas-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+  // ---------- Zoom & pan ----------
+  const viewport = document.getElementById('viewport');
+  const stage = document.getElementById('stage');
+  let scale = 1, tx = 60, ty = 20;
+  const zoomPct = document.getElementById('zoomPct');
+
+  function render() {
+    stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+    zoomPct.textContent = Math.round(scale * 100) + '%';
+  }
+  function fitInitial() {
+    const vw = viewport.clientWidth, vh = viewport.clientHeight;
+    scale = Math.min(1, Math.min((vw - 40) / 1360, (vh - 40) / 700));
+    tx = (vw - 1360 * scale) / 2;
+    ty = (vh - 700 * scale) / 2;
+    render();
+  }
+  window.addEventListener('resize', fitInitial);
+  setTimeout(fitInitial, 30);
+
+  document.getElementById('zoomIn').addEventListener('click', () => { scale = Math.min(2, scale + .12); render(); });
+  document.getElementById('zoomOut').addEventListener('click', () => { scale = Math.max(.4, scale - .12); render(); });
+  document.getElementById('zoomReset').addEventListener('click', fitInitial);
+
+  viewport.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -.08 : .08;
+    const newScale = Math.min(2, Math.max(.4, scale + delta));
+    const rect = viewport.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    tx = mx - ((mx - tx) / scale) * newScale;
+    ty = my - ((my - ty) / scale) * newScale;
+    scale = newScale;
+    render();
+  }, { passive: false });
+
+  let dragging = false, sx = 0, sy = 0, stx = 0, sty = 0;
+  viewport.addEventListener('mousedown', (e) => {
+    dragging = true; sx = e.clientX; sy = e.clientY; stx = tx; sty = ty;
+    viewport.classList.add('grabbing');
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    tx = stx + (e.clientX - sx);
+    ty = sty + (e.clientY - sy);
+    render();
+  });
+  window.addEventListener('mouseup', () => { dragging = false; viewport.classList.remove('grabbing'); });
+
+  // ---------- Guided views ----------
+  const chips = Array.from(document.querySelectorAll('.chip'));
+  const nodes = Array.from(document.querySelectorAll('.node'));
+  const zones = {
+    all: null,
+    value: document.getElementById('zoneValue'),
+    revenue: document.getElementById('zoneRevenue'),
+    ops: document.getElementById('zoneOps')
+  };
+  Object.values(zones).forEach(z => { if (z) z.style.opacity = 0; });
+
+  function setActive(key) {
+    chips.forEach(c => c.classList.toggle('active', c.dataset.zone === key));
+    nodes.forEach(n => {
+      if (key === 'all') { n.classList.remove('dim', 'hot'); return; }
+      if (n.dataset.zone === key) { n.classList.add('hot'); n.classList.remove('dim'); }
+      else { n.classList.add('dim'); n.classList.remove('hot'); }
+    });
+    Object.entries(zones).forEach(([k, z]) => { if (z) z.style.opacity = (k === key) ? 1 : 0; });
+  }
+  chips.forEach(c => c.addEventListener('click', () => setActive(c.dataset.zone)));
+
+  const order = ['all', 'value', 'revenue', 'ops'];
+  let playing = false, storyIdx = 0, storyTimer = null;
+  const playBtn = document.getElementById('playBtn');
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    if (playing) {
+      playBtn.textContent = '⏸ Pausar historia';
+      storyTimer = setInterval(() => {
+        storyIdx = (storyIdx + 1) % order.length;
+        setActive(order[storyIdx]);
+      }, 2200);
+    } else {
+      playBtn.textContent = '▶ Reproducir historia';
+      clearInterval(storyTimer);
+    }
+  });
+})();
+</script>
 </body>
 </html>
