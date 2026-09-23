@@ -1,6 +1,6 @@
 ## Modelo Canvas - Spotify
 
-[Abrir diagrama interactivo]( https://jffa25.github.io/Practicas_Integradora_230417/spotify-bmc.html)
+[Abrir diagrama interactivo](https://jffa25.github.io/Practicas_Integradora_230417/Practica03/spotify-bmc.html)
 
 ![Vista previa del Modelo](/Practica03/spotify-bmc.visual-check.1440x900.dark.png)
 
