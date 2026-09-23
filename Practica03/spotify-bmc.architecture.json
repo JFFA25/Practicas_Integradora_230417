@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Business Model Canvas — Spotify",
+    "output": "spotify-bmc.html",
+    "quality_profile": "showcase",
+    "viewBox": [1395, 740],
+    "views": [
+      { "id": "sostienen-valor", "label": "Soporte de la propuesta", "focus": ["key-partners", "key-activities", "key-resources", "value-props"], "note": "Socios, actividades y recursos alimentan la propuesta de valor." },
+      { "id": "entrega-al-cliente", "label": "Entrega al cliente", "focus": ["value-props", "channels", "customer-relations", "customer-segments"], "note": "La propuesta llega a los segmentos a través de los canales." },
+      { "id": "finanzas", "label": "Finanzas", "focus": ["cost-structure", "revenue-streams", "customer-segments", "key-resources"], "note": "Costos operativos y fuentes de ingreso del modelo." }
+    ]
+  },
+  "components": [
+    { "id": "key-partners", "type": "external", "label": "Socios clave", "sublabel": "Sellos, distribuidoras, hardware, telecoms", "tag": "Externos", "pos": [24, 70], "size": [236, 520] },
+    { "id": "key-activities", "type": "backend", "label": "Actividades clave", "sublabel": "Licenciamiento, algoritmos y contratos", "tag": "Streaming", "pos": [314, 70], "size": [220, 240] },
+    { "id": "key-resources", "type": "database", "label": "Recursos clave", "sublabel": "Catálogo, nube, datos y algoritmo", "tag": "Activos", "pos": [314, 350], "size": [220, 240] },
+    { "id": "value-props", "type": "frontend", "label": "Propuesta de valor", "sublabel": "Ilimitado, playlists, multiplataforma", "tag": "Freemium", "pos": [588, 70], "size": [236, 520] },
+    { "id": "customer-relations", "type": "frontend", "label": "Relación con clientes", "sublabel": "Self-service, soporte y comunidad", "pos": [878, 70], "size": [220, 240] },
+    { "id": "channels", "type": "frontend", "label": "Canales", "sublabel": "Móvil, web, escritorio y autos", "tag": "Smart speakers", "pos": [878, 350], "size": [220, 240] },
+    { "id": "customer-segments", "type": "external", "label": "Segmentos de clientes", "sublabel": "Free, Premium, Familiar y Estudiantes", "tag": "Artistas y sellos", "pos": [1152, 70], "size": [228, 520] },
+    { "id": "cost-structure", "type": "cloud", "label": "Estructura de costos", "sublabel": "Licencias musicales, servidores, marketing y desarrollo", "pos": [24, 630], "size": [510, 90] },
+    { "id": "revenue-streams", "type": "backend", "label": "Fuentes de ingresos", "sublabel": "Suscripciones premium, publicidad y planes familiar/estudiante", "tag": "Recurrente + Ads", "pos": [878, 630], "size": [502, 90] }
+  ],
+  "connections": [
+    { "id": "kp-ka", "from": "key-partners", "to": "key-activities", "label": "catálogo", "fromSide": "right", "toSide": "left", "labelAt": [287, 190] },
+    { "id": "kp-kr", "from": "key-partners", "to": "key-resources", "label": "hardware", "fromSide": "right", "toSide": "left", "labelAt": [287, 470] },
+    { "id": "ka-vp", "from": "key-activities", "to": "value-props", "label": "aportan", "fromSide": "right", "toSide": "left", "labelAt": [561, 190] },
+    { "id": "kr-vp", "from": "key-resources", "to": "value-props", "label": "sostienen", "fromSide": "right", "toSide": "left", "labelAt": [561, 470] },
+    { "id": "vp-cr", "from": "value-props", "to": "customer-relations", "label": "fideliza", "fromSide": "right", "toSide": "left", "labelAt": [851, 190] },
+    { "id": "vp-ch", "from": "value-props", "to": "channels", "label": "entregan", "fromSide": "right", "toSide": "left", "labelAt": [851, 470] },
+    { "id": "cr-cs", "from": "customer-relations", "to": "customer-segments", "label": "retienen", "fromSide": "right", "toSide": "left", "labelAt": [1125, 190] },
+    { "id": "ch-cs", "from": "channels", "to": "customer-segments", "label": "llegan", "fromSide": "right", "toSide": "left", "labelAt": [1125, 470] },
+    { "id": "kp-co", "from": "key-partners", "to": "cost-structure", "label": "regalías", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [142, 610] },
+    { "id": "kr-co", "from": "key-resources", "to": "cost-structure", "label": "inversión", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [424, 610] },
+    { "id": "cs-in", "from": "customer-segments", "to": "revenue-streams", "label": "pagan", "fromSide": "bottom", "toSide": "top", "labelAt": [1266, 610] },
+    { "id": "in-co", "from": "revenue-streams", "to": "cost-structure", "label": "financian la operación", "variant": "dashed", "fromSide": "left", "toSide": "right", "route": "orthogonal-h", "labelAt": [706, 675] }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Soporte del modelo", "items": ["Socios: sellos, distribuidoras, hardware y telecoms", "Actividades: licenciamiento, algoritmos, contratos y streaming", "Recursos: catálogo, nube, datos y algoritmo"] },
+    { "dot": "rose", "title": "Entrega y monetización", "items": ["Propuesta: música ilimitada, playlists, multiplataforma y freemium", "Segmentos free/premium llegan por app, web, escritorio, speakers y autos", "Ingresos (suscripciones y publicidad) financian licencias, servidores, marketing y desarrollo"] }
+  ]
+}

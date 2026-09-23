@@ -1,20 +1,8 @@
 ## Modelo Canvas - Spotify
 
-[Abrir diagrama interactivo](https://jffa25.github.io/Practicas_Integradora_230417/Practica03/spotify-modelo-canvas.html)
+[Abrir diagrama interactivo]( https://jffa25.github.io/Practicas_Integradora_230417/spotify-bmc.html)
 
-![Vista previa del Modelo](/images/ModeloCanvas_Spotify.png)
-
-## Video Demostracion
-
-
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/32daab71-c59e-4895-8054-12ee996fd141" width="80%" controls></video>
-</p>
-
-Para poder subir el video con la demostracion se uso la pagina Clideo para comprimir el tamaño del video ya que solo esta permitido un maximo de 10MB
-
-> URL del Sitio https://clideo.com/es/compress-video
-
+![Vista previa del Modelo](/Practica03/spotify-bmc.visual-check.1440x900.dark.png)
 
 ## Descripción — Business Model Canvas de Spotify
 
