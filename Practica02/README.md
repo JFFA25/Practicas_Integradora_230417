@@ -1,3 +1,7 @@
+## Práctica02 - Boceto de Arquitectura con Archify
+
+Instalación y configuración de Archify (agente de modelado arquitectónico) con interacción con Codex de OpenAI. Se generó un diagrama de arquitectura interactivo en HTML del sistema, incluyendo capa móvil, autenticación, API, datos, servicios externos e infraestructura de desarrollo.
+
 ## Arquitectura de la aplicación móvil
 
 [Abrir diagrama interactivo](https://jffa25.github.io/Practicas_Integradora_230417/architecture-mobile-platform.html)

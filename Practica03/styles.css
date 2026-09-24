@@ -1,0 +1,389 @@
+/* ============================================================
+   1. Variables — paleta oficial de Spotify y tipografía
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;800&display=swap");
+
+:root {
+  --green: #1db954;          /* acento principal */
+  --green-bright: #1ed760;   /* hover y elementos activos */
+  --black: #191414;
+  --bg: #121212;             /* fondo de la página */
+  --surface: #181818;        /* tarjetas y modal */
+  --surface-hover: #282828;
+  --text: #ffffff;
+  --text-muted: #b3b3b3;
+  --radius: 12px;
+  --transition: 200ms;
+}
+
+/* ============================================================
+   2. Base
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* Bloquea el scroll de fondo mientras el modal está abierto */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* ============================================================
+   3. Encabezado
+   ============================================================ */
+.page-header {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 1.75rem;
+  text-align: center;
+}
+
+.spotify-logo {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.6rem;
+}
+
+.spotify-logo path {
+  fill: var(--green);
+}
+
+.page-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   4. Layout — grid clásico del canvas (escritorio: 10 col × 3 filas)
+   ============================================================ */
+.bmc-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-areas:
+    "part part actv actv val val rel rel seg seg"
+    "part part res  res  val val chan chan seg seg"
+    "cost cost cost cost cost rev  rev  rev  rev  rev";
+  grid-template-rows: 170px 170px 120px;
+  gap: 12px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3.5rem;
+}
+
+/* Ubicación de cada bloque en el layout clásico */
+.card[data-block="key-partners"] { grid-area: part; }
+.card[data-block="key-activities"] { grid-area: actv; }
+.card[data-block="key-resources"] { grid-area: res; }
+.card[data-block="value-props"] { grid-area: val; }
+.card[data-block="customer-relations"] { grid-area: rel; }
+.card[data-block="channels"] { grid-area: chan; }
+.card[data-block="customer-segments"] { grid-area: seg; }
+.card[data-block="cost-structure"] { grid-area: cost; }
+.card[data-block="revenue-streams"] { grid-area: rev; }
+
+/* ============================================================
+   5. Tarjetas (bloques del canvas)
+   ============================================================ */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--surface-hover);
+  border-radius: var(--radius);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--transition) ease, border-color var(--transition) ease;
+}
+
+.card:hover {
+  background: var(--surface-hover);
+  border-color: var(--green);
+}
+
+/* Bloque que abrió el modal: resaltado con borde verde */
+.card.is-active {
+  background: var(--surface-hover);
+  border-color: var(--green);
+}
+
+/* Ícono monocromático arriba a la izquierda */
+.card-icon {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  transition: color var(--transition) ease;
+}
+
+.card-icon svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card.is-active .card-icon {
+  color: var(--green);
+}
+
+/* Título centrado en negrita */
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  transition: color var(--transition) ease;
+}
+
+.card.is-active .card-title {
+  color: var(--green);
+}
+
+/* Resumen corto: una sola línea, sin recortar con "…" */
+.card-summary {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   6. Modal de detalle
+   ============================================================ */
+.bmc-modal {
+  width: min(640px, calc(100vw - 32px));
+  max-height: 80vh;
+  overflow-y: auto;
+  margin: auto;
+  padding: 2rem 1.5rem 1.5rem;
+  border: 1px solid var(--surface-hover);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.bmc-modal::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+/* Animación de entrada: fade + ligera escala */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.bmc-modal[open] {
+  animation: modal-in 200ms ease;
+}
+
+/* Botón de cierre (X) arriba a la derecha */
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition) ease, background var(--transition) ease;
+}
+
+.modal-close:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.modal-close svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Ícono en un cuadro con fondo --surface-hover */
+.modal-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  background: var(--surface-hover);
+  color: var(--green);
+}
+
+.modal-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.modal-title {
+  margin: 1.1rem 2.5rem 0 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.modal-subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Etiqueta con la métrica */
+.modal-metric {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--surface-hover);
+  color: var(--green);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Línea "DETALLE COMPLETO" en mayúsculas pequeñas */
+.modal-label {
+  margin: 1.5rem 0 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--surface-hover);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Lista de puntos con encabezado en negrita y flecha verde */
+.modal-points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.modal-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.point-arrow {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.15rem;
+  color: var(--green);
+}
+
+.point-arrow svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.modal-points strong {
+  font-weight: 700;
+}
+
+.point-detail {
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   7. Foco visible con teclado
+   ============================================================ */
+.card:focus-visible,
+.modal-close:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   8. Responsive
+   ============================================================ */
+@media (max-width: 1024px) {
+  .bmc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: none;
+    grid-template-rows: none;
+  }
+
+  .card[data-block] {
+    grid-area: auto;
+    height: 130px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bmc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card[data-block] {
+    height: 130px;
+  }
+
+  .bmc-modal {
+    width: calc(100% - 32px);
+  }
+
+  .page-header {
+    padding-top: 2.25rem;
+  }
+}
