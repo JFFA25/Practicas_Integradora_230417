@@ -2,7 +2,7 @@
 
 Business Model Canvas interactivo de **Spotify**, generado con **opencode** y **Archify**. Cada bloque es clicable y abre un modal con su información detallada.
 
-**[Ver el diagrama en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica03/spotify-bmc.html)**
+**[Ver el diagrama en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica03/index.html)**
 
 ![Vista previa del Modelo](/images/ModeloCanvas_Spotify_2.0.png)
 
