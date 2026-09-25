@@ -1,10 +1,13 @@
 // script.js — Construye el grid e interactúa con el Business Model Canvas.
 // Los datos viven en BMC_DATA (data.js); aquí solo se renderizan.
+// El detalle se muestra expandiendo la propia tarjeta (técnica FLIP),
+// sin modal: la tarjeta crece hasta casi toda la pantalla y se contrae
+// de regreso a su celda exacta del grid.
 
 (function () {
   const grid = document.getElementById("bmc-grid");
-  const modal = document.getElementById("bmc-modal");
-  if (!grid || !modal || typeof BMC_DATA === "undefined") return;
+  const overlay = document.getElementById("bmc-overlay");
+  if (!grid || !overlay || typeof BMC_DATA === "undefined") return;
 
   // Íconos SVG monocromáticos por bloque (trazo se controla desde styles.css).
   const ICONS = {
@@ -54,8 +57,21 @@
     "revenue-streams": "5 fuentes de ingresos",
   };
 
-  /** Tarjeta del bloque actualmente abierta en el modal (null si ninguna). */
+  // Duración (ms) de la animación FLIP de crecimiento / contracción.
+  const EXPAND_MS = 400;
+
+  /** Tarjeta actualmente expandida (null si ninguna). */
   let activeCard = null;
+  /** Animaciones de expansión/contracción en curso. */
+  let animCount = 0;
+
+  const isReducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const beginAnimation = () => animCount++;
+  const endAnimation = () => {
+    animCount = Math.max(0, animCount - 1);
+  };
+  const isAnimating = () => animCount > 0;
 
   /** Crea un <button class="card"> a partir de un dato. */
   function createCard(data) {
@@ -64,6 +80,7 @@
     card.className = "card";
     card.dataset.block = data.id;
     card.setAttribute("aria-haspopup", "dialog");
+    card.setAttribute("aria-expanded", "false");
 
     const icon = document.createElement("span");
     icon.className = "card-icon";
@@ -72,6 +89,7 @@
 
     const title = document.createElement("span");
     title.className = "card-title";
+    title.id = `card-title-${data.id}`;
     title.textContent = data.title;
 
     const summary = document.createElement("span");
@@ -79,68 +97,240 @@
     summary.textContent = data.resumen || "";
 
     card.append(icon, title, summary);
-    card.addEventListener("click", () => openModal(data, card));
+
+    card.addEventListener("click", () => toggleCard(card, data));
+    card.addEventListener("keydown", trapFocus);
     return card;
   }
 
-  /** Abre el modal con el detalle del bloque indicado. */
-  function openModal(data, card) {
-    activeCard = card;
+  /** Atrapa el foco dentro de la tarjeta expandida (dialog). */
+  function trapFocus(e) {
+    if (e.key !== "Tab") return;
+    const dialog = e.currentTarget;
+    const close = dialog.querySelector(".expand-close");
+    if (!close) return;
 
-    modal.querySelector(".modal-icon").innerHTML = ICONS[data.id] || "";
-    modal.querySelector(".modal-title").textContent = data.title;
-    modal.querySelector(".modal-subtitle").textContent = EN_NAMES[data.id] || "";
-    modal.querySelector(".modal-metric").textContent = METRICS[data.id] || "";
-    modal.querySelector(".modal-points").replaceChildren(
-      ...data.points.map(renderPoint)
-    );
+    const order = [dialog, close];
+    const index = order.indexOf(document.activeElement);
+    if (index === -1) return;
 
-    document.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
-    card.classList.add("is-active");
-    document.body.classList.add("no-scroll");
-    if (!modal.open) modal.showModal();
+    const target = e.shiftKey
+      ? order[(index - 1 + order.length) % order.length]
+      : order[(index + 1) % order.length];
+    if (target !== document.activeElement) {
+      e.preventDefault();
+      target.focus();
+    }
   }
 
-  /** Renderiza un punto de la lista: flecha verde + encabezado en negrita. */
+  /** Abre (o cierra) la tarjeta al hacer clic en ella. */
+  function toggleCard(card, data) {
+    if (isAnimating()) return;
+
+    // Ya hay otra expandida: se cierra esa y se abre la nueva.
+    if (activeCard && activeCard !== card) {
+      closeCard(activeCard, { returnFocus: false });
+      openCard(card, data);
+      return;
+    }
+
+    // Hacer clic de nuevo en la tarjeta expandida la contrae.
+    if (activeCard === card) {
+      closeCard(card);
+      return;
+    }
+
+    openCard(card, data);
+  }
+
+  /** Expande la tarjeta con animación FLIP desde su tamaño real. */
+  function openCard(card, data) {
+    const first = card.getBoundingClientRect();
+
+    // Espacio reservado en el grid: evita que el resto del canvas se mueva.
+    const ghost = document.createElement("span");
+    ghost.className = "card-ghost";
+    ghost.dataset.block = card.dataset.block;
+    ghost.setAttribute("aria-hidden", "true");
+    card.after(ghost);
+
+    buildExpandedContent(card, data);
+
+    card.classList.add("is-expanded", "is-active");
+    card.setAttribute("role", "dialog");
+    card.setAttribute("aria-modal", "true");
+    card.setAttribute("aria-labelledby", `card-title-${data.id}`);
+    card.setAttribute("aria-expanded", "true");
+
+    overlay.classList.add("is-visible");
+    document.body.classList.add("no-scroll");
+
+    const last = card.getBoundingClientRect();
+    const dx = first.left - last.left;
+    const dy = first.top - last.top;
+    const sx = first.width / last.width;
+    const sy = first.height / last.height;
+
+    activeCard = card;
+
+    // Sin movimiento reducido: la tarjeta solo aparece con fade.
+    if (isReducedMotion() || typeof card.animate !== "function") return;
+
+    beginAnimation();
+    const flip = card.animate(
+      [
+        {
+          transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+          transformOrigin: "top left",
+        },
+        { transform: "none", transformOrigin: "top left" },
+      ],
+      { duration: EXPAND_MS, easing: "ease-in-out", fill: "backwards" }
+    );
+    flip.onfinish = endAnimation;
+    flip.oncancel = endAnimation;
+  }
+
+  /** Contrae la tarjeta y la devuelve a su celda exacta (FLIP inverso). */
+  function closeCard(card, { returnFocus = true } = {}) {
+    const from = card.getBoundingClientRect();
+    const sibling = card.nextElementSibling;
+    const ghost = sibling && sibling.classList.contains("card-ghost") ? sibling : null;
+    const to = ghost ? ghost.getBoundingClientRect() : from;
+
+    const finish = () => {
+      card.classList.remove("is-expanded", "is-active");
+      card.removeAttribute("role");
+      card.removeAttribute("aria-modal");
+      card.removeAttribute("aria-labelledby");
+      card.setAttribute("aria-expanded", "false");
+      cleanupExpanded(card);
+      if (ghost) ghost.remove();
+
+      if (activeCard === card) {
+        activeCard = null;
+        overlay.classList.remove("is-visible");
+        document.body.classList.remove("no-scroll");
+        if (returnFocus) card.focus();
+      }
+    };
+
+    const canAnimate =
+      !isReducedMotion() &&
+      typeof card.animate === "function" &&
+      from.width > 0 &&
+      to.width > 0;
+
+    if (!canAnimate) {
+      finish();
+      return;
+    }
+
+    beginAnimation();
+    const tx = to.left - from.left;
+    const ty = to.top - from.top;
+    const tsx = to.width / from.width;
+    const tsy = to.height / from.height;
+
+    const flip = card.animate(
+      [
+        { transform: "none", transformOrigin: "top left" },
+        {
+          transform: `translate(${tx}px, ${ty}px) scale(${tsx}, ${tsy})`,
+          transformOrigin: "top left",
+        },
+      ],
+      { duration: EXPAND_MS, easing: "ease-in-out" }
+    );
+    const done = () => {
+      finish();
+      endAnimation();
+    };
+    flip.onfinish = done;
+    flip.oncancel = done;
+  }
+
+  /** Añade el contenido propio de la vista expandida a la tarjeta. */
+  function buildExpandedContent(card, data) {
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "expand-close";
+    close.setAttribute("aria-label", "Cerrar detalle");
+    close.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    close.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (activeCard === card && !isAnimating()) closeCard(card);
+    });
+
+    const subtitle = document.createElement("span");
+    subtitle.className = "card-subtitle";
+    subtitle.textContent = EN_NAMES[data.id] || "";
+
+    const metric = document.createElement("span");
+    metric.className = "card-metric";
+    metric.textContent = METRICS[data.id] || "";
+
+    const label = document.createElement("span");
+    label.className = "card-label";
+    label.textContent = "Detalle completo";
+
+    const points = document.createElement("span");
+    points.className = "card-points";
+    data.points.forEach((point) => points.appendChild(renderPoint(point)));
+
+    card.append(subtitle, metric, label, points, close);
+  }
+
+  /** Quita el contenido temporal de la vista expandida. */
+  function cleanupExpanded(card) {
+    card
+      .querySelectorAll(
+        ".card-subtitle, .card-metric, .card-label, .card-points, .expand-close"
+      )
+      .forEach((node) => node.remove());
+  }
+
+  /** Renderiza un punto: flecha verde + encabezado (arriba) + descripción (debajo). */
   function renderPoint(text) {
-    const li = document.createElement("li");
+    const point = document.createElement("span");
+    point.className = "card-point";
 
     const arrow = document.createElement("span");
     arrow.className = "point-arrow";
     arrow.setAttribute("aria-hidden", "true");
-    arrow.innerHTML =
-      '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+    arrow.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+
+    const wrap = document.createElement("span");
+    wrap.className = "point-text";
 
     const header = document.createElement("strong");
     const colon = text.indexOf(":");
     if (colon !== -1) {
       header.textContent = text.slice(0, colon);
-      const rest = document.createElement("span");
-      rest.className = "point-detail";
-      rest.textContent = text.slice(colon + 1).trim();
-      li.append(arrow, header, rest);
+      const detail = document.createElement("span");
+      detail.className = "point-detail";
+      detail.textContent = text.slice(colon + 1).trim();
+      wrap.append(header, detail);
     } else {
       header.textContent = text;
-      li.append(arrow, header);
+      wrap.append(header);
     }
-    return li;
+
+    point.append(arrow, wrap);
+    return point;
   }
 
-  // Cierre: botón X, clic fuera del modal y tecla Esc (manejo nativo).
-  modal.querySelector(".modal-close").addEventListener("click", () => modal.close());
-
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) modal.close();
+  // Cierre con la tecla Esc.
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && activeCard && !isAnimating()) {
+      closeCard(activeCard);
+    }
   });
 
-  /** Limpieza al cerrar: suelta el scroll, quita el resaltado y devuelve el foco. */
-  modal.addEventListener("close", () => {
-    document.body.classList.remove("no-scroll");
-    document.querySelectorAll(".card").forEach((c) => c.classList.remove("is-active"));
-    if (activeCard) {
-      activeCard.focus();
-      activeCard = null;
-    }
+  // Cierre al hacer clic en el overlay (margen alrededor de la tarjeta).
+  overlay.addEventListener("click", () => {
+    if (activeCard && !isAnimating()) closeCard(activeCard);
   });
 
   // Render inicial: un botón por cada entrada de BMC_DATA.

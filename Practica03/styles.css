@@ -8,12 +8,15 @@
   --green-bright: #1ed760;   /* hover y elementos activos */
   --black: #191414;
   --bg: #121212;             /* fondo de la página */
-  --surface: #181818;        /* tarjetas y modal */
+  --surface: #181818;        /* tarjetas */
   --surface-hover: #282828;
   --text: #ffffff;
   --text-muted: #b3b3b3;
   --radius: 12px;
   --transition: 200ms;
+  --expand-duration: 400ms;  /* duración de la expansión / contracción */
+  --expand-ease: ease-in-out;
+  --overlay: rgba(0, 0, 0, 0.6);
 }
 
 /* ============================================================
@@ -32,7 +35,7 @@ body {
   line-height: 1.5;
 }
 
-/* Bloquea el scroll de fondo mientras el modal está abierto */
+/* Bloquea el scroll del fondo mientras una tarjeta está expandida */
 body.no-scroll {
   overflow: hidden;
 }
@@ -71,6 +74,9 @@ body.no-scroll {
 
 /* ============================================================
    4. Layout — grid clásico del canvas (escritorio: 10 col × 3 filas)
+   Nota: los selectores usan [data-block] para que la tarjeta
+   expandida y su espacio reservado (.card-ghost) compartan la
+   misma celda sin descuadrar a las demás.
    ============================================================ */
 .bmc-grid {
   display: grid;
@@ -87,15 +93,15 @@ body.no-scroll {
 }
 
 /* Ubicación de cada bloque en el layout clásico */
-.card[data-block="key-partners"] { grid-area: part; }
-.card[data-block="key-activities"] { grid-area: actv; }
-.card[data-block="key-resources"] { grid-area: res; }
-.card[data-block="value-props"] { grid-area: val; }
-.card[data-block="customer-relations"] { grid-area: rel; }
-.card[data-block="channels"] { grid-area: chan; }
-.card[data-block="customer-segments"] { grid-area: seg; }
-.card[data-block="cost-structure"] { grid-area: cost; }
-.card[data-block="revenue-streams"] { grid-area: rev; }
+[data-block="key-partners"] { grid-area: part; }
+[data-block="key-activities"] { grid-area: actv; }
+[data-block="key-resources"] { grid-area: res; }
+[data-block="value-props"] { grid-area: val; }
+[data-block="customer-relations"] { grid-area: rel; }
+[data-block="channels"] { grid-area: chan; }
+[data-block="customer-segments"] { grid-area: seg; }
+[data-block="cost-structure"] { grid-area: cost; }
+[data-block="revenue-streams"] { grid-area: rev; }
 
 /* ============================================================
    5. Tarjetas (bloques del canvas)
@@ -124,7 +130,7 @@ body.no-scroll {
   border-color: var(--green);
 }
 
-/* Bloque que abrió el modal: resaltado con borde verde */
+/* Bloque abierto: resaltado con borde verde */
 .card.is-active {
   background: var(--surface-hover);
   border-color: var(--green);
@@ -176,50 +182,87 @@ body.no-scroll {
 }
 
 /* ============================================================
-   6. Modal de detalle
+   6. Overlay de fondo (atenúa el canvas tras la tarjeta abierta)
    ============================================================ */
-.bmc-modal {
-  width: min(640px, calc(100vw - 32px));
-  max-height: 80vh;
-  overflow-y: auto;
-  margin: auto;
-  padding: 2rem 1.5rem 1.5rem;
+.bmc-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: var(--overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 0s linear 200ms;
+}
+
+.bmc-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 200ms ease, visibility 0s;
+}
+
+/* ============================================================
+   7. Tarjeta expandida (reemplaza al modal)
+   Elementos solo visibles en la vista expandida.
+   ============================================================ */
+.card-subtitle,
+.card-metric,
+.card-label,
+.card-points,
+.card-ghost {
+  display: none;
+}
+
+/* Espacio reservado: mantiene la celda original del bloque en el
+   grid mientras la tarjeta se vuelve position: fixed. */
+.card-ghost {
+  min-width: 0;
+  pointer-events: none;
+  background: var(--surface);
   border: 1px solid var(--surface-hover);
   border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--text);
 }
 
-.bmc-modal::backdrop {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+.card.is-expanded + .card-ghost {
+  display: block;
 }
 
-/* Animación de entrada: fade + ligera escala */
-@keyframes modal-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* Contenedor expandido: casi toda la pantalla, con margen y 100dvh */
+.card.is-expanded {
+  position: fixed;
+  z-index: 50;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  width: auto;
+  height: calc(100vh - 48px);
+  height: calc(100dvh - 48px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  padding: clamp(1.4rem, 4vw, 2.5rem);
+  text-align: left;
+  overflow: hidden;
+  background: var(--surface-hover);
+  border-color: var(--green);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
 }
 
-.bmc-modal[open] {
-  animation: modal-in 200ms ease;
+.card.is-expanded:focus-visible {
+  outline: none;
 }
 
-/* Botón de cierre (X) arriba a la derecha */
-.modal-close {
+/* Botón de cierre (X) fijo arriba a la derecha de la tarjeta */
+.expand-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: clamp(0.75rem, 2vw, 1.1rem);
+  right: clamp(0.75rem, 2vw, 1.1rem);
+  z-index: 1;
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -228,102 +271,117 @@ body.no-scroll {
   transition: color var(--transition) ease, background var(--transition) ease;
 }
 
-.modal-close:hover {
-  background: var(--surface-hover);
+.expand-close:hover {
+  background: rgba(0, 0, 0, 0.45);
   color: var(--text);
 }
 
-.modal-close svg {
-  width: 1.1rem;
-  height: 1.1rem;
+.expand-close svg {
+  width: 1.15rem;
+  height: 1.15rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-/* Ícono en un cuadro con fondo --surface-hover */
-.modal-icon {
+/* Ícono del bloque: se agranda y pasa al flujo del encabezado */
+.card.is-expanded .card-icon {
+  position: static;
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 1.25rem;
   border-radius: 10px;
-  background: var(--surface-hover);
+  background: var(--black);
   color: var(--green);
 }
 
-.modal-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.card.is-expanded .card-icon svg {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
-.modal-title {
-  margin: 1.1rem 2.5rem 0 0;
-  font-size: 1.6rem;
+/* Título agrandado con clamp */
+.card.is-expanded .card-title {
+  padding-right: 2.5rem;
+  font-size: clamp(1.75rem, 5vw, 3rem);
   font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.02em;
+  color: var(--text);
 }
 
-.modal-subtitle {
-  margin: 0.2rem 0 0;
+.card.is-expanded .card-summary {
+  display: none;
+}
+
+/* Subtítulo en inglés */
+.card.is-expanded .card-subtitle {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
   color: var(--text-muted);
-  font-size: 0.9rem;
 }
 
-/* Etiqueta con la métrica */
-.modal-metric {
+/* Etiqueta con la métrica (ej. "5 tipos de socios") */
+.card.is-expanded .card-metric {
   display: inline-block;
-  margin-top: 1rem;
-  padding: 0.25rem 0.75rem;
+  align-self: flex-start;
+  margin-top: 1.25rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  background: var(--surface-hover);
+  background: var(--surface);
   color: var(--green);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
 }
 
 /* Línea "DETALLE COMPLETO" en mayúsculas pequeñas */
-.modal-label {
-  margin: 1.5rem 0 0.75rem;
+.card.is-expanded .card-label {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--surface-hover);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-/* Lista de puntos con encabezado en negrita y flecha verde */
-.modal-points {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 0.75rem;
+/* Lista de puntos: columna apilada con scroll interno si no cabe.
+   Nunca se muestra en dos columnas, en ningún tamaño de pantalla. */
+.card.is-expanded .card-points {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2.5vw, 1.35rem);
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 0.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 
-.modal-points li {
+/* Un punto: flecha verde a la izquierda, encabezado arriba y
+   descripción debajo (apilado, nunca en dos columnas) */
+.card-point {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
-  font-size: 0.92rem;
-  line-height: 1.45;
+  gap: 0.7rem;
 }
 
 .point-arrow {
-  flex-shrink: 0;
+  flex: none;
   display: grid;
   place-items: center;
-  width: 1.1rem;
-  height: 1.1rem;
-  margin-top: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.25rem;
   color: var(--green);
 }
 
@@ -337,25 +395,79 @@ body.no-scroll {
   stroke-linejoin: round;
 }
 
-.modal-points strong {
+.point-text {
+  display: block;
+  min-width: 0;
+}
+
+.card-point strong {
+  display: block;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .point-detail {
+  display: block;
+  margin-top: 0.15rem;
   color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
+/* Aparición con fade (con retraso escalonado) de los elementos */
+@keyframes expand-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes card-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card.is-expanded .card-subtitle,
+.card.is-expanded .card-metric,
+.card.is-expanded .card-label,
+.card.is-expanded .expand-close {
+  animation: expand-fade calc(var(--expand-duration) + 60ms) var(--expand-ease) both;
+}
+
+.card.is-expanded .card-subtitle { animation-delay: 80ms; }
+.card.is-expanded .card-metric { animation-delay: 160ms; }
+.card.is-expanded .card-label { animation-delay: 240ms; }
+.card.is-expanded .expand-close { animation-delay: 20ms; }
+
+.card.is-expanded .card-point {
+  animation: expand-fade var(--expand-duration) var(--expand-ease) both;
+}
+
+.card.is-expanded .card-point:nth-child(1) { animation-delay: 280ms; }
+.card.is-expanded .card-point:nth-child(2) { animation-delay: 340ms; }
+.card.is-expanded .card-point:nth-child(3) { animation-delay: 400ms; }
+.card.is-expanded .card-point:nth-child(4) { animation-delay: 460ms; }
+.card.is-expanded .card-point:nth-child(5) { animation-delay: 520ms; }
+
 /* ============================================================
-   7. Foco visible con teclado
+   8. Foco visible con teclado
    ============================================================ */
 .card:focus-visible,
-.modal-close:focus-visible {
+.expand-close:focus-visible {
   outline: 2px solid var(--green-bright);
   outline-offset: 2px;
 }
 
 /* ============================================================
-   8. Responsive
+   9. Responsive
    ============================================================ */
 @media (max-width: 1024px) {
   .bmc-grid {
@@ -364,9 +476,19 @@ body.no-scroll {
     grid-template-rows: none;
   }
 
-  .card[data-block] {
+  [data-block] {
     grid-area: auto;
     height: 130px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card.is-expanded {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    height: calc(100vh - 24px);
+    height: calc(100dvh - 24px);
   }
 }
 
@@ -375,15 +497,45 @@ body.no-scroll {
     grid-template-columns: 1fr;
   }
 
-  .card[data-block] {
-    height: 130px;
-  }
-
-  .bmc-modal {
-    width: calc(100% - 32px);
-  }
-
   .page-header {
     padding-top: 2.25rem;
+  }
+
+  /* Textos legibles, mínimo 16px en móvil */
+  .card.is-expanded .card-subtitle,
+  .card.is-expanded .card-point strong,
+  .card.is-expanded .point-detail {
+    font-size: 16px;
+  }
+
+  .card.is-expanded .card-metric {
+    font-size: 0.875rem;
+  }
+
+  .card.is-expanded .card-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================================
+   10. Preferencia de movimiento reducido: sin crecimiento,
+   solo fade (la animación FLIP se omite también desde JS)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card.is-expanded,
+  .bmc-overlay,
+  .expand-close {
+    transition: none;
+  }
+
+  .card.is-expanded .card-subtitle,
+  .card.is-expanded .card-metric,
+  .card.is-expanded .card-label,
+  .card.is-expanded .expand-close,
+  .card.is-expanded .card-point {
+    animation-name: card-fade;
+    animation-duration: 150ms;
+    animation-delay: 0ms;
   }
 }

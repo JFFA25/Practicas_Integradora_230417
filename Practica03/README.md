@@ -20,6 +20,7 @@ Spotify: app multiplataforma (Android, iOS, web, escritorio, smart TV, consolas 
 | v2 | Bloques expandibles al clic, accesibles, responsive, datos en `data.js` | Estilos básicos, emojis y espacios vacíos |
 | v3 | Paleta oscura de Spotify, íconos SVG en lugar de emojis | La expansión descuadraba el layout |
 | v4 | Layout fijo del canvas clásico y detalle en modal (Esc, clic fuera, botón X) | Versión final |
+| v5 | La propia tarjeta se expande a pantalla completa (relativa a la pantalla del usuario) en lugar de modal, y lista apilada en móvil | Versión final |
 
 Prompts completos en [`prompts/`](./prompts).
 
