@@ -130,12 +130,12 @@ button {
 .canvas {
   display: grid;
   gap: var(--gap);
-  align-items: start;
+  align-items: stretch;
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .slot {
-  align-self: start;
+  align-self: stretch;
   height: var(--slot-h, auto);
   transition: opacity var(--dur) var(--ease);
 }
@@ -160,6 +160,7 @@ body.is-open .slot:not(.is-open) {
 
 .card {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
@@ -226,6 +227,9 @@ body.is-open .slot:not(.is-open) {
    ============================================================ */
 
 .panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transform-origin: 0 0;
 }
 
@@ -289,6 +293,14 @@ body.is-open .slot:not(.is-open) {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 20px 26px 30px;
+  opacity: 1;
+  transition: opacity 140ms ease-in;
+}
+
+/* Al cerrar, el contenido largo se desvanece rápido para no verse
+   comprimido/ilegible mientras la tarjeta todavía se está encogiendo. */
+.panel.is-closing .panel__body {
+  opacity: 0;
 }
 
 .panel__meta {
@@ -525,7 +537,8 @@ body.is-open .slot:not(.is-open) {
   .card__icon,
   .slot,
   .scrim,
-  .closer {
+  .closer,
+  .panel__body {
     transition: none;
   }
 

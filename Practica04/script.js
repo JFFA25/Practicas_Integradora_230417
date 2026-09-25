@@ -14,7 +14,6 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   var supportsInert = 'inert' in HTMLElement.prototype;
   var current = null;
-  var scrimTimer = 0;
 
   function make(tag, className, text) {
     var node = document.createElement(tag);
@@ -117,10 +116,18 @@
     };
     var expanded = { transform: 'none', borderRadius: '18px' };
 
-    return panel.animate(closing ? [expanded, collapsed] : [collapsed, expanded], {
+    panel.style.willChange = 'transform';
+
+    var anim = panel.animate(closing ? [expanded, collapsed] : [collapsed, expanded], {
       duration: 400,
       easing: 'ease-in-out'
     });
+
+    anim.addEventListener('finish', function () {
+      panel.style.willChange = '';
+    });
+
+    return anim;
   }
 
   function fadeBody(panel) {
@@ -151,6 +158,7 @@
 
     slot.style.setProperty('--slot-h', start.height + 'px');
     slot.classList.add('is-open');
+    panel.classList.remove('is-closing');
     panel.classList.add('is-open');
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-modal', 'true');
@@ -182,35 +190,54 @@
     var slot = current.slot;
     var panel = current.panel;
     var card = current.card;
-    var from = panel.getBoundingClientRect();
 
     current = null;
+
+    // Feedback inmediato: se anuncia el cierre y se atenúa el fondo,
+    // pero el panel SIGUE con la clase "is-open" (tamaño grande) hasta
+    // que la animación termine. Quitarla antes causaba el salto de
+    // texto/estilos a mitad de la animación.
     card.setAttribute('aria-expanded', 'false');
-    panel.removeAttribute('role');
-    panel.removeAttribute('aria-modal');
-    panel.removeAttribute('aria-labelledby');
-    panel.classList.remove('is-open');
-    slot.classList.remove('is-open');
-    document.body.classList.remove('is-open', 'is-locked');
+    document.body.classList.remove('is-locked');
     scrim.classList.remove('is-visible');
     closer.hidden = true;
-    setOthersInert(false);
+    panel.classList.add('is-closing');
 
-    window.clearTimeout(scrimTimer);
-    scrimTimer = window.setTimeout(function () { scrim.hidden = true; }, 400);
-
-    var to = panel.getBoundingClientRect();
-    var release = function () {
-      if (!panel.classList.contains('is-open')) slot.style.removeProperty('--slot-h');
-    };
-
-    if (instant || reduceMotion.matches) {
-      release();
-    } else {
-      flip(panel, from, to, true).addEventListener('finish', release);
+    function finishClose() {
+      panel.removeAttribute('role');
+      panel.removeAttribute('aria-modal');
+      panel.removeAttribute('aria-labelledby');
+      panel.classList.remove('is-open', 'is-closing');
+      slot.classList.remove('is-open');
+      document.body.classList.remove('is-open');
+      setOthersInert(false);
+      scrim.hidden = true;
+      slot.style.removeProperty('--slot-h');
+      card.focus({ preventScroll: true });
     }
 
-    card.focus({ preventScroll: true });
+    if (instant) {
+      finishClose();
+      return;
+    }
+
+    if (reduceMotion.matches) {
+      panel
+        .animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-out' })
+        .addEventListener('finish', finishClose);
+      return;
+    }
+
+    // El panel sigue "grande" (position: fixed) en este momento, así que
+    // su rect actual es el tamaño real. El rect pequeño de destino se
+    // toma del slot: aunque el panel esté fuera del flujo normal, el
+    // slot conserva la posición y altura (--slot-h) de la tarjeta
+    // colapsada original, incluso si la ventana cambió de tamaño
+    // mientras el bloque estaba abierto.
+    var bigRect = panel.getBoundingClientRect();
+    var smallRect = slot.getBoundingClientRect();
+
+    flip(panel, smallRect, bigRect, true).addEventListener('finish', finishClose);
   }
 
   function onKeydown(event) {
