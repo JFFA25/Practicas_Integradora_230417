@@ -23,7 +23,8 @@ Spotify es una aplicación de streaming de música y podcasts. Para esta prácti
 | Versión | Qué pidió | Qué corrigió después |
 |---|---|---|
 | v1 | Diagrama de secuencia de pantallas con 2 roles (oyente y artista), bocetos de baja fidelidad, flechas numeradas, estados alternos e interacción | Faltaba la identidad visual de la aplicación elegida |
-| v2 | Aplicar la paleta de colores inspirada en Spotify y crear un logotipo propio, sin cambiar las pantallas | Se verificó que ningún texto se saliera de los marcos tras el cambio de colores |
+| v2 | Aplicar la paleta de colores inspirada en Spotify y crear un logotipo propio, sin cambiar las pantallas | Los botones de rol solo resaltaban el recorrido, sin llevar al carril correspondiente |
+| v3 | Navegación al seleccionar un rol: desplazamiento suave hasta su carril, realce breve, foco accesible y respeto de `prefers-reduced-motion` | Versión final |
 
 <details>
 <summary>Prompt v1 — Diagrama de secuencia de pantallas</summary>
@@ -88,12 +89,38 @@ Salida: el mismo archivo HTML actualizado.
 ```
 </details>
 
+<details>
+<summary>Prompt v3 — Navegación al seleccionar un rol</summary>
+
+```
+Conserva exactamente el diseño, los colores, las pantallas, las flechas y la interacción actual. Agrega únicamente navegación al seleccionar un rol:
+
+- Al hacer clic en el botón "Oyente" o "Artista", además de resaltar su recorrido, desplázate suavemente hasta el carril de ese rol para que sus pantallas queden visibles.
+- Si el carril ya está visible en pantalla, no hagas scroll innecesario.
+- Deja un margen superior para que el título del carril no quede pegado al borde ni tapado por ningún encabezado fijo.
+- Si el diagrama se desplaza horizontalmente en pantallas pequeñas, lleva también el scroll horizontal al inicio del recorrido del rol (la primera pantalla).
+- Aplica un destello o realce breve (por ejemplo, un contorno verde que se desvanece en 1 segundo) en el carril al llegar, para que el usuario vea a dónde fue.
+- Mueve el foco al encabezado del carril, con tabindex="-1", para que quien usa teclado o lector de pantalla llegue al mismo lugar, y anuncia el cambio con una región aria-live (por ejemplo, "Mostrando el recorrido del artista").
+- Respeta prefers-reduced-motion: si está activo, desplázate sin animación y sin destello.
+- Si se vuelve a hacer clic en el mismo rol, repite el desplazamiento y no quites el resaltado.
+- El botón "Restablecer selección" debe quitar el resaltado sin mover la vista.
+- No uses librerías externas; usa scrollIntoView con behavior "smooth" o equivalente.
+
+Verificaciones:
+- Pruébalo con el diagrama en escritorio y en móvil, y con navegación por teclado.
+- Comprueba que ningún texto se salga de los marcos y que el cursor siga siendo tipo enlace.
+
+Salida: el mismo archivo HTML actualizado.
+```
+</details>
+
 ## Revisión del resultado
 
 - 2 roles con su recorrido de pantallas (oyente y artista): sí
 - Bocetos de baja fidelidad con flechas numeradas y estados alternos: sí
 - Paleta de colores inspirada en Spotify y logotipo propio: sí
 - Interacción por pantalla (panel de detalle, resaltado por rol, tema claro/oscuro): sí
+- Los botones de rol llevan al carril correspondiente: por confirmar
 - Se ve bien en celular y escritorio: por confirmar
 - Rutas configuradas para funcionar bien en GitHub Pages: por confirmar al publicar
 
