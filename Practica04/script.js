@@ -28,19 +28,37 @@
 
   function buildCard(block) {
     var card = make('button', 'card');
-    var badge = make('span', 'card__icon');
+    var media = make('span', 'card__media');
+    var image = make('img', 'card__image');
     var title = make('span', 'card__title', block.title);
     var summary = make('span', 'card__summary', block.summary);
 
-    badge.innerHTML = icon(block.icon);
+    image.src = './images/' + block.image;
+    image.alt = block.imageAlt;
+    image.loading = 'lazy';
+    media.appendChild(image);
     title.id = 'title-' + block.id;
     card.type = 'button';
     card.id = 'card-' + block.id;
     card.setAttribute('aria-expanded', 'false');
     card.setAttribute('aria-controls', 'panel-' + block.id);
-    card.appendChild(badge);
+    card.appendChild(media);
     card.appendChild(title);
     card.appendChild(summary);
+
+    if (block.highlights && block.highlights.length) {
+      var highlights = make('span', 'card__highlights');
+      if (block.id === 'costs' || block.id === 'revenue') {
+        highlights.classList.add('card__highlights--wide');
+      }
+      block.highlights.forEach(function (highlight) {
+        var item = make('span', 'card__highlight');
+        item.appendChild(make('span', 'card__highlight-mark'));
+        item.appendChild(make('span', 'card__highlight-text', highlight));
+        highlights.appendChild(item);
+      });
+      card.appendChild(highlights);
+    }
 
     return card;
   }
@@ -51,10 +69,36 @@
     var meta = make('div', 'panel__meta');
     var list = make('ul', 'panel__points');
 
+    if (block.id === 'resources') {
+      list.classList.add('panel__points--cards');
+    }
+
     meta.appendChild(make('span', 'panel__subtitle', block.subtitle));
     meta.appendChild(make('span', 'panel__metric', block.metric));
     body.appendChild(meta);
     body.appendChild(make('p', 'panel__eyebrow', 'Detalle completo'));
+
+    var visual = make('figure', 'panel__visual');
+    var image = make('img', 'panel__image');
+    image.src = './images/' + block.image;
+    image.alt = block.imageAlt;
+    image.loading = 'lazy';
+    visual.appendChild(image);
+    visual.appendChild(make('figcaption', 'panel__caption', block.caption));
+    body.appendChild(visual);
+
+    block.sections.forEach(function (section) {
+      var content = make('section', 'panel__section');
+      content.appendChild(make('h3', 'panel__section-title', section.title));
+      section.paragraphs.forEach(function (paragraph) {
+        content.appendChild(make('p', 'panel__intro', paragraph));
+      });
+      body.appendChild(content);
+    });
+
+    if (block.id === 'resources') {
+      body.appendChild(make('h3', 'panel__section-title panel__points-heading', 'Componentes y documentación'));
+    }
 
     block.points.forEach(function (point) {
       var item = make('li', 'point');
@@ -63,9 +107,20 @@
 
       mark.innerHTML = icon('chevron');
       text.appendChild(make('span', 'point__label', point.label));
+      var toggle = make('button', 'point__toggle');
+      var extra = make('div', 'point__extra', point.extra);
+      var extraId = 'extra-' + block.id + '-' + list.children.length;
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', extraId);
+      toggle.setAttribute('aria-label', 'Mostrar detalle: ' + point.label);
       text.appendChild(make('span', 'point__detail', point.detail));
-      item.appendChild(mark);
-      item.appendChild(text);
+      toggle.appendChild(mark);
+      toggle.appendChild(text);
+      extra.id = extraId;
+      extra.hidden = true;
+      item.appendChild(toggle);
+      item.appendChild(extra);
       list.appendChild(item);
     });
 
@@ -90,6 +145,14 @@
     canvas.appendChild(fragment);
 
     canvas.addEventListener('click', function (event) {
+      var toggle = event.target.closest('.point__toggle');
+      if (toggle) {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        toggle.setAttribute('aria-label', (expanded ? 'Mostrar detalle: ' : 'Ocultar detalle: ') + toggle.querySelector('.point__label').textContent);
+        document.getElementById(toggle.getAttribute('aria-controls')).hidden = expanded;
+        return;
+      }
       var card = event.target.closest('.card');
       if (!card) return;
       var slot = card.closest('.slot');
