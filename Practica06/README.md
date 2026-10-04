@@ -2,7 +2,7 @@
 
 Diagrama interactivo de **secuencia de pantallas (sketches)** de la aplicación móvil de **Spotify** con **2 roles**: oyente y artista, generado con **Archify**. Cada pantalla es clicable y abre un panel con su propósito, sus elementos de interfaz y la acción que lleva a la siguiente pantalla.
 
-**[Ver el diagrama en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica06/diagrama-secuencia-pantallas-spotify.html)**
+**[Ver el diagrama en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica06/spotify-secuencia-pantallas.html)**
 
 ### Diagrama de Secuencia de Pantallas - Spotify 
 ![Vista previa del diagrama de secuencia de pantallas](/Practica06/spotify-secuencia-pantallas.visual-check.2048x1320.dark.png)
