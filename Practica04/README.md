@@ -4,9 +4,17 @@ Business Model Canvas interactivo de **SICPES** (Sistema Integral de Control de 
 
 **[Ver el canvas en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica04/index.html)**
 
+### Modelo Canvas - SICPES Version Final
+![Vista previa del Modelo](/images/sicpes_canvas_2.png)
+
+### Modelo Canvas - SICPES Version Inicial
 ![Vista previa del Modelo](/images/sicpes_canvas.png)
 
-## SICPES <p align="center">
+### Documentación de imágenes
+
+Consulta los créditos, autores y fuentes de las fotografías utilizadas en el canvas en la [documentación de imágenes](./IMAGENES.md).
+
+## SICPES (Sistema Integral de Control de Pension de Estudiantes) <p align="center">
   <img src="/images/SICPES_Producto.png" alt="SICPES" width="80" height="80">
 </p>
 
@@ -16,11 +24,12 @@ SICPES es un sistema de gestión para albergues o pensiones estudiantiles, pensa
 
 | Versión | Qué pidió | Qué corrigió después |
 |---|---|---|
-| v1 | Los 9 bloques del canvas para SICPES con contenido concreto del negocio | Faltaban detalles de operación y flujo del sistema |
-| v2 | Bloques con interacción, estado expandido y datos en `data.js` | Se mejoró la estructura visual y la usabilidad |
-| v3 | Diseño limpio, estilos de card, paleta institucional y responsive | Ajuste de proporciones y layout de bloque |
-| v4 | Panel modal/expandible con cierre por clic fuera y teclado | Versión final refinada |
-| v5 | Exclusión de elementos innecesarios, claridad en métricas y nombres de secciones | Versión final para despliegue |
+| v1 | Los nueve bloques clásicos con contenido concreto para SICPES | Se necesitaban más detalles de operación |
+| v2 | Interacción para expandir bloques, accesibilidad y datos en `data.js` | Se refinó el diseño y el contenido |
+| v3 | Fotografías reales locales y descripciones ampliadas | Se documentaron las fuentes y licencias |
+| v4 | Más información en bloques amplios y presentación ordenada en tarjetas | Mejor lectura en móvil y escritorio |
+| v5 | Viñetas verdes consistentes y detalles desplegables en cada elemento | Interacción uniforme y accesible |
+| v6 | Sección en el README principal para enlazar los créditos de imágenes | Navegación directa a la documentación |
 
 <details>
 <summary>Prompt v1</summary>
@@ -64,6 +73,60 @@ Código:
 ```
 </details>
 
+<details>
+<summary>Prompt v3 — Fotografías reales y contenido ampliado</summary>
+
+```
+Mejora el Business Model Canvas de SICPES sin cambiar su distribución clásica ni su interacción actual.
+
+- Reemplaza las ilustraciones e íconos de los nueve bloques por fotografías reales y relevantes para cada tema. No uses SVG, dibujos ni emojis.
+- Revisa primero las imágenes existentes. Si agregas fotografías, usa fuentes con licencia de uso adecuada, guárdalas localmente en el proyecto y evita enlaces externos.
+- Usa imágenes distintas y pertinentes para socios, actividades, propuesta de valor, relación con clientes, segmentos, recursos, canales, costos e ingresos.
+- Añade texto alternativo y conserva las proporciones con recortes uniformes.
+- Amplía la descripción de cada bloque con varios párrafos cortos y ejemplos concretos de cómo se relaciona con SICPES y la operación de una pensión estudiantil.
+- No inventes cifras, proveedores, acuerdos ni capacidades no confirmadas; identifica claramente cualquier posibilidad como propuesta.
+- Mantén el diseño responsive y comprueba que las rutas relativas funcionen en GitHub Pages.
+- Documenta en un archivo Markdown los autores, fuentes y licencias de las fotografías, con enlaces a las páginas originales.
+```
+</details>
+
+<details>
+<summary>Prompt v4 — Espacio y organización del contenido</summary>
+
+```
+Conserva el diseño, las fotografías reales y las descripciones actuales del canvas. Ajusta únicamente la distribución del contenido:
+
+- Agrega información útil a los bloques que tengan más espacio disponible y mantén más breves los bloques pequeños.
+- En los paneles expandidos, organiza los elementos relacionados en tarjetas o secciones con títulos, espaciado y jerarquía visual, en lugar de una lista larga de renglones.
+- En pantallas grandes, usa columnas cuando ayuden a aprovechar el espacio; en móviles, acomoda el contenido en una sola columna.
+- No inventes información ni alteres la distribución clásica o el comportamiento existente.
+- Verifica el resultado en escritorio y móvil.
+```
+</details>
+
+<details>
+<summary>Prompt v5 — Indicadores verdes y detalles interactivos</summary>
+
+```
+Haz consistentes los indicadores verdes de los elementos informativos en todos los bloques del canvas:
+
+- Agrega las viñetas verdes a los bloques que todavía no las tengan.
+- En los paneles expandidos, muestra un botón circular verde con una flecha junto a cada elemento informativo.
+- Al pulsar cada elemento, despliega información adicional relacionada; al volver a pulsarlo, permite contraerla. Aplica el comportamiento a todos los elementos de los nueve bloques.
+- Implementa los controles como botones accesibles, con soporte de teclado, estado de foco visible y atributos aria-expanded actualizados.
+- Mantén el diseño, las fotografías locales, las descripciones y el comportamiento actual para abrir y cerrar los bloques.
+- Comprueba que los detalles se puedan leer completos en móvil y escritorio, y que no haya contenido recortado.
+```
+</details>
+
+<details>
+<summary>Prompt v6 — Documentación de imágenes</summary>
+
+```
+En el README principal, agrega una sección con un título de nivel ### llamada “Documentación de imágenes”, un texto breve que explique que ahí se consultan los créditos y las fuentes de las fotografías y un enlace relativo a `CREDITOS-IMAGENES.md`.
+```
+</details>
+
 ## Revisión del resultado
 
 - 9 bloques en posición clásica del canvas: sí
@@ -84,4 +147,4 @@ El canvas se agrupa en tres zonas:
 
 ## Autor
 
-JFFA25
+- **Jose Francisco Flores Amador** /[@JFFA25](https://github.com/JFFA25)
