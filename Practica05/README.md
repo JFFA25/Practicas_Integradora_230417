@@ -5,8 +5,8 @@ Diagrama interactivo de **Roles de Usuario** de **SICPES** (Sistema Integral de 
 **[Ver el diagrama de roles en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/Practica05/diagrama-roles-usuario-sicpes.html)**
 
 
-### Diagrama de Casos de Uso - SICPES Version Final
-![Vista previa del diagrama de casos de uso](/Practica05/sicpes_roles.png)
+### Diagrama de Roles de Usuario - SICPES
+![Vista previa del diagrama de roles de usuario](/Practica05/sicpes_roles.png)
 
 ### Documentación de la historia de usuario
 
