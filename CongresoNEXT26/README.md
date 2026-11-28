@@ -17,7 +17,7 @@ Cada actividad incluye:
 - **Evidencia fotográfica:** mis capturas de cada actividad; se abren en grande al tocarlas.
 - **Mi conclusión, puntos de interés y meta personal.**
 
-Actividades registradas: días **23, 24 y 25 de noviembre de 2026**.
+Actividades registradas: días **23 al 27 de noviembre de 2026** (el 26 la magistral se pospuso al 14 de diciembre; del 27 no se tomó evidencia fotográfica).
 
 ## Funciones de la página
 
