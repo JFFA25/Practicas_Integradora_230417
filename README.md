@@ -43,6 +43,7 @@ Este repositorio contiene las prácticas desarrolladas durante la materia de **I
 | 02|[Práctica02 - Boceto de Arquitectura con Archify](/Practica02/README.md) | Instalación y configuración de Archify (agente de modelado arquitectónico) con interacción con Codex de OpenAI. Se generó un diagrama de arquitectura interactivo en HTML del sistema, incluyendo capa móvil, autenticación, API, datos, servicios externos e infraestructura de desarrollo. | 24 | Completada ✅ |
 |03|[Practica03 - Boceto de Modelo Canvas con Archify](/Practica03/README.md)|El estudiantes realizara un prompt para solicitar el modelo bussiness canvas para una herramienta multiplataforma que exista o use en su vida cotidianda.|10|Completada ✅ |
 |06|[Practica06 - Diagrama de Secuencia de Pantallas (Sketches) de Spotify con 2 Roles](/Practica06/README.md)|El estudiante realizará un prompt para generar el diagrama de secuencia de pantallas (sketches) de una aplicación móvil elegida (Spotify) con 2 roles, oyente y artista, con paleta de colores y logotipo propios, publicado en GitHub Pages.|20|Completada ✅ |
+|07|[Actividad Congreso NEXT UTXJ 2026 - Línea de Tiempo Interactiva de Participación](/CongresoNEXT26/README.md)|El estudiante realizará una línea de tiempo interactiva de su participación en el 2.º Congreso Internacional NEXT UTXJ 2026, con las conferencias, magistrales y talleres a los que asistió. Cada actividad incluye ponente, evidencia fotográfica, conclusión personal, puntos de interés y una meta personal, publicada en GitHub Pages.|--|Completada ✅ |
 
 ### Autor
 
