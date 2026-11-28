@@ -2,7 +2,7 @@
 
 Línea de tiempo interactiva con mi **participación en el 2.º Congreso Internacional NEXT UTXJ 2026** (Tecnologías de la Información, Xicotepec, Puebla). Cada conferencia, magistral o taller al que asistí es una tarjeta con su ponente, su evidencia fotográfica, mi conclusión, los puntos que me interesaron y una meta personal.
 
-**[Ver la línea de tiempo en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/CongresoNEXT26/linea-tiempo-congreso-next.html)**
+**[Ver la línea de tiempo en GitHub Pages](https://jffa25.github.io/Practicas_Integradora_230417/CongresoNEXT26/NEXT26.html)**
 
 ### Vista previa
 ![Vista previa de la línea de tiempo del congreso](/CongresoNEXT26/linea-tiempo-congreso-next.preview.png)
